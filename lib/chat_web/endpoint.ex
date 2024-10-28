@@ -11,6 +11,8 @@ defmodule ChatWeb.Endpoint do
     same_site: "Lax"
   ]
 
+  plug ChatWeb.Plugs.RouteRequest
+
   socket "/live", Phoenix.LiveView.Socket,
     websocket: [connect_info: [session: @session_options]],
     longpoll: [connect_info: [session: @session_options]]

@@ -20,6 +20,12 @@ if System.get_env("PHX_SERVER") do
   config :chat, ChatWeb.Endpoint, server: true
 end
 
+config :chat,
+  fly_region: System.get_env("FLY_REGION", "blank"),
+  fly_process_group: System.get_env("FLY_PROCESS_GROUP", "blank"),
+  fly_machine_id: System.get_env("FLY_MACHINE_ID", "blank"),
+  fly_vm_memory_mb: System.get_env("FLY_VM_MEMORY_MB", "blank")
+
 if config_env() == :prod do
   # The secret key base is used to sign/encrypt cookies and other secrets.
   # A default value is used in config/dev.exs and config/test.exs but you

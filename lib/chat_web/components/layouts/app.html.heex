@@ -1,20 +1,4 @@
-<header class="flex justify-center space-x-4 py-2 border-b border-gray-300">
-  <ul class="flex space-x-4">
-    <li><span class="font-semibold">region:</span> <%= System.get_env("FLY_REGION") %></li>
-    <li>
-      <span class="font-semibold">process group:</span> <%= System.get_env("FLY_PROCESS_GROUP") %>
-    </li>
-    <li>
-      <span class="font-semibold">machine id:</span> <%= System.get_env("FLY_MACHINE_ID") %>
-    </li>
-    <li>
-      <span class="font-semibold">memory:</span> <%= System.get_env("FLY_VM_MEMORY_MB") %>
-    </li>
-  </ul>
-</header>
-<main class="px-4 py-20 sm:px-6 lg:px-8">
-  <div class="mx-auto max-w-2xl">
-    <.flash_group flash={@flash} />
-    <%= @inner_content %>
-  </div>
+<main>
+  <.flash_group flash={@flash} />
+  <%= @inner_content %>
 </main>
