@@ -14,7 +14,7 @@ PHX_HOST = 'fly-dist-chat.fly.dev'
 PORT = '8080'
 
 [processes]
-p0 = '/app/bin/server'
+# p0 = '/app/bin/server'
 p1 = '/app/bin/server'
 
 [http_service]
@@ -23,18 +23,19 @@ force_https = true
 auto_stop_machines = "off"
 auto_start_machines = true
 min_machines_running = 1
-processes = ['p0', 'p1']
+# processes = ['p0', 'p1']
+processes = ['p1']
 
 [http_service.concurrency]
 type = 'connections'
 hard_limit = 1000
 soft_limit = 1000
 
-[[vm]]
-memory = '1gb'
-cpu_kind = 'shared'
-cpus = 2
-processes = ['p0']
+# [[vm]]
+# memory = '1gb'
+# cpu_kind = 'shared'
+# cpus = 2
+# processes = ['p0']
 
 [[vm]]
 memory = '512mb'

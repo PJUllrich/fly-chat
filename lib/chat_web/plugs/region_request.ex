@@ -1,4 +1,4 @@
-defmodule ChatWeb.Plugs.RouteRequest do
+defmodule ChatWeb.Plugs.RegionRequest do
   use Plug.Builder
 
   import Plug.Conn
@@ -15,7 +15,6 @@ defmodule ChatWeb.Plugs.RouteRequest do
   end
 
   def handle_conn(%Plug.Conn{params: params} = conn, _opts) do
-    IO.inspect(conn)
     machine_region = Application.get_env(:chat, :fly_region)
     machine_id = Application.get_env(:chat, :fly_machine_id)
 

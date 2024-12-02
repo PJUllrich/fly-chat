@@ -10,12 +10,12 @@ defmodule ChatWeb.HomeLive do
           <li>
             <span class="font-semibold">region:</span> <%= Application.get_env(:chat, :fly_region) %>
           </li>
-          <li>
+          <%!-- <li>
             <span class="font-semibold">process group:</span> <%= Application.get_env(
               :chat,
               :fly_process_group
             ) %>
-          </li>
+          </li> --%>
           <li>
             <span class="font-semibold">machine id:</span> <%= Application.get_env(
               :chat,
@@ -32,13 +32,17 @@ defmodule ChatWeb.HomeLive do
       </header>
       <div class="mt-12 max-w-2xl mx-auto">
         <div class="flex justify-center w-full space-x-2 pb-2">
-          <.link href={~p"/?#{[region: :dfw, priority: 0]}"} class="btn">Chat DFW - P0</.link>
-          <.link href={~p"/?#{[region: :dfw, priority: 1]}"} class="btn">Chat DFW - P1</.link>
-          <.link href={~p"/?#{[region: :ams, priority: 1]}"} class="btn">Chat AMS - P1</.link>
+          <.link
+            :for={{creator_id, machine_id} <- @creators}
+            href={~p"/?#{[instance: machine_id]}"}
+            class={["btn", @creator_id == creator_id && "bg-green-600 text-white"]}
+          >
+            Stream: <%= creator_id %>
+          </.link>
         </div>
         <ul id="chat" phx-update="stream" class="rounded-md p-3 border border-gray-300 h-full">
           <li :for={{dom_id, message} <- @streams.messages} id={dom_id}>
-            <%= @region %>: <%= message.body %>
+            <%= @creator_id %>: <%= message.body %>
           </li>
         </ul>
       </div>
@@ -52,8 +56,13 @@ defmodule ChatWeb.HomeLive do
       Phoenix.PubSub.subscribe(Chat.PubSub, "chat")
     end
 
-    region = Application.get_env(:chat, :fly_region)
-    {:ok, socket |> assign(:region, region) |> stream(:messages, [])}
+    state = Chat.Creators.get_state()
+    creators = Enum.sort_by(state.creators, fn {key, _value} -> key end)
+
+    {:ok,
+     socket
+     |> assign(creator_id: state.creator_id, creators: creators)
+     |> stream(:messages, [])}
   end
 
   @impl true
