@@ -5,6 +5,8 @@ defmodule Chat.Creators do
 
   @topic "creators"
 
+  # Public functions
+
   def start_link(args) do
     GenServer.start_link(__MODULE__, args, name: __MODULE__)
   end
@@ -13,27 +15,31 @@ defmodule Chat.Creators do
     GenServer.call(__MODULE__, :get_state)
   end
 
+  # Callbacks
+
   @impl GenServer
   def init(_args) do
     creator_id = :crypto.strong_rand_bytes(4) |> Base.encode16()
+
     state = %{creator_id: creator_id, creators: %{}}
     state = update_creators(state, creator_id, machine_id())
-    Phoenix.PubSub.subscribe(Chat.PubSub, @topic)
 
+    Phoenix.PubSub.subscribe(Chat.PubSub, @topic)
     Process.send_after(self(), :discover_creators, 100)
+
     {:ok, state}
   end
 
   @impl GenServer
   def handle_info(:discover_creators, state) do
     schedule_discovery()
-    broadcast_topic(:discover, state)
+    broadcast_topic(:discover_request, state)
 
     {:noreply, state}
   end
 
   @impl GenServer
-  def handle_info({:discover, _node_pid, creator_id, machine_id}, state) do
+  def handle_info({:discover_request, _node_pid, creator_id, machine_id}, state) do
     state = update_creators(state, creator_id, machine_id)
     broadcast_topic(:discover_reply, state)
 

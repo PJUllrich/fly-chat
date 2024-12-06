@@ -2,7 +2,7 @@ defmodule ChatWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :chat
 
   def call(conn, opts) do
-    case ChatWeb.Plugs.MachineRequest.call(conn, opts) do
+    case ChatWeb.Plugs.RedirectToMachine.call(conn, opts) do
       %Plug.Conn{halted: true} = conn -> conn
       conn -> super(conn, opts)
     end
